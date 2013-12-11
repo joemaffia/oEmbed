@@ -1,5 +1,5 @@
 # oEmbed
-Automatically embed for you the YouTube or Vimeo iFrame
+Automatically embed YouTube or Vimeo videos
 or simply return the JSON object with all the data
 
 Based on  https://github.com/starfishmod
