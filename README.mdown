@@ -1,0 +1,53 @@
+# oEmbed
+Automatically embed for you the YouTube or Vimeo iFrame
+or simply return the JSON object with all the data
+
+Based on  https://github.com/starfishmod
+Refactor to match the 'Highly configurable' mutable plugin boilerplate https://github.com/jquery-boilerplate/jquery-patterns
+
+* Author: @joemaffia (c) 2013
+
+
+## Markup
+Mark up your html like this.
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<span data-url="http://www.youtube.com/watch?v=tT_cpT_kxOg" class="oembed"></span>
+
+<span data-url="http://vimeo.com/18684598" class="oembed2"></span>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="oEmbed.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+	$( document ).ready(function() {
+
+		$(".oembed").oEmbed(null, {
+               injectCode:function(data) {
+                  var iframe = (data.html).replace('src', 'data-src');
+                  this.wrap('<div class="video-container"></div>');
+                  var oembedContainer = this.parent();
+                  oembedContainer.append(iframe);
+               }
+          });
+
+          $(".oembed2").oEmbed();
+
+          // Later in the page or afterEmbed 'callback'
+          $("iframe").attr('src', function() {
+            return $(this).attr('data-src');
+          });
+
+    });
+</script>
+</body>
+</html>
+```
