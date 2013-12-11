@@ -62,15 +62,6 @@
       // globally or using an object literal.
       this.config = $.extend({}, this.defaults, this.options, this.metadata);
 
-      // Sample usage:
-      // Set the message per instance:
-      // $('#element').plugin({ message: 'Goodbye World!'});
-      // or
-      // var p = new oEmbed(document.getElementById('element'),
-      // { message: 'Goodbye World!'}).init()
-      // or, set the global default message:
-      // oEmbed.defaults.message = 'Goodbye World!'
-
       var container = this.$element,
       resourceURL =  (this.url && (!this.url.indexOf('http://') || !this.url.indexOf('https://'))) ? this.url : container.attr("data-url"),
       provider;
