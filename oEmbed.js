@@ -134,7 +134,6 @@
         var oembedContainer = container.parent();
         oembedContainer.append(iframe);
       } else {
-        // console.log(this);
         this.config.injectCode.call(container, data);
       }
 
@@ -145,7 +144,6 @@
 
   $.fn.oEmbed = function(url, options) {
     return this.each(function() {
-      console.log("\nSTART "+this)
       new oEmbed(this, url, options).init();
     });
   };
