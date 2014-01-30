@@ -41,19 +41,20 @@
     },
 
     // array of providers and their config
+    // make sure the apiendpoint contains the querystring start '?' or '&'
     providers:[
-      {
-        name: "youtube",
-        type: "video",
-        urlschemes: ["youtube\\.com/watch.+v=[\\w-]+&?", "youtu\\.be/[\\w-]+"],
-        apiendpoint: window.location.protocol+"//www.youtube.com/oembed"
-      },
-      {
-        name: "vimeo",
-        type: "video",
-        urlschemes: ["www\.vimeo\.com\/groups\/.*\/videos\/.*", "www\.vimeo\.com\/.*", "vimeo\.com\/groups\/.*\/videos\/.*", "vimeo\.com\/.*"],
-        apiendpoint: window.location.protocol+"//vimeo.com/api/oembed.json"
-      }
+        {
+            name: "youtube",
+            type: "video",
+            urlschemes: ["youtube\\.com/watch.+v=[\\w-]+&?", "youtu\\.be/[\\w-]+"],
+            apiendpoint: window.location.protocol+"//www.youtube.com/oembed?scheme="+window.location.protocol.replace(':','')+"&"
+        },
+        {
+            name: "vimeo",
+            type: "video",
+            urlschemes: ["www\.vimeo\.com\/groups\/.*\/videos\/.*", "www\.vimeo\.com\/.*", "vimeo\.com\/groups\/.*\/videos\/.*", "vimeo\.com\/.*"],
+            apiendpoint: window.location.protocol+"//vimeo.com/api/oembed.json?"
+        }
     ],
 
     // where everything start
@@ -94,7 +95,7 @@
     getOEmbedCode: function(container, resourceURL, provider) {
 
       var _self = this;
-      var url = provider.apiendpoint+'?format=json&url='+resourceURL
+      var url = provider.apiendpoint+'format=json&url='+resourceURL
 
       var query = 'SELECT * FROM '
           + 'json'
