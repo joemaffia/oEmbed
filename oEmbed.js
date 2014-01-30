@@ -111,7 +111,7 @@
           },
           success: function(data) {
             _self.config.beforeEmbed.call(container, data);
-            _self.onSuccess(data.query.results.json, resourceURL, container);
+            _self.onSuccess(data.query.results.json, resourceURL, container, provider);
             _self.config.afterEmbed.call(container, data);
           },
           error: this.config.onError.call(container, resourceURL, provider)
@@ -122,21 +122,46 @@
 
     // called onSuccess of ajax
     // inject the code or just return the JSON object or anything else if need
-    onSuccess: function(data, resourceURL, container) {
+    onSuccess: function(data, resourceURL, container, provider) {
 
-      if (data === null) return;
+      if ( data === null ) return;
+
+      var html = $(data.html);
+      var tag = html.prop("tagName").toLowerCase();
 
       if (this.config.injectCode === true) {
-        // You must replace it yourself on domReady to avoid the iframe tax
-        // ...in this way the iframe content load onlly when all the rest is there
-        var iframe = (data.html).replace('src', 'data-src');
-        container.wrap('<div class="video-container"></div>');
-        var oembedContainer = container.parent();
-        oembedContainer.append(iframe);
-      } else {
+        if ( tag == "iframe" ) {
+          // You must replace it yourself on domReady to avoid the iframe tax
+          // ...in this way the iframe content load onlly when all the rest is there
+          var src = html.attr('src');
+
+          if ( provider.name == "youtube" ) {
+            var uri = src.split('?');
+
+            if ( uri[1] == null ) {
+                uri[1] = '';
+            }
+            
+            // since the youtube video always rectangle, make sure it is opaque to avoid rendering flaws
+            uri[1] += '&wmode=opaque';
+
+            src = uri.join('?');
+          }
+
+          html
+            .attr('data-src', src)
+            .removeAttr('src');
+        }
+      } 
+      else if (typeof this.config.injectCode ==  "function") {
+        // call custom inject function
         this.config.injectCode.call(container, data);
+        return;
       }
 
+      container.wrap('<div class="video-container"></div>');
+      var oembedContainer = container.parent();
+      oembedContainer.append(html);
     }
   }
 
@@ -152,5 +177,3 @@
   // optional: window.oEmbed = oEmbed;
   
 })( jQuery, window , document );
-
-
