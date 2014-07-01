@@ -11,10 +11,10 @@
  * Author: @joemaffia
  */
 
-;(function( $, window, document, undefined ){
+;(function( window, document, undefined ){
 
-  // our plugin constructor
-  var oEmbed = function( element, url, options ){
+  // Plugin constructor
+  function OEmbed( element, url, options ){
     this.element = element;
     this.url = url;
     this.$element = $(element);
@@ -28,7 +28,7 @@
   };
 
   // the plugin prototype
-  oEmbed.prototype = {
+  OEmbed.prototype = {
 
     // default settings
     defaults: {
@@ -133,7 +133,7 @@
       if (this.config.injectCode === true) {
         if ( tag == "iframe" ) {
           // You must replace it yourself on domReady to avoid the iframe tax
-          // ...in this way the iframe content load onlly when all the rest is there
+          // ...in this way the iframe content load only when all the rest is there
           var src = html.attr('src');
 
           if ( provider.name == "youtube" ) {
@@ -166,15 +166,29 @@
     }
   }
 
-  oEmbed.defaults = oEmbed.prototype.defaults;
+  OEmbed.defaults = OEmbed.prototype.defaults;
 
-  $.fn.oEmbed = function(url, options) {
-    return this.each(function() {
-      new oEmbed(this, url, options).init();
+  // Binding function
+  // this function binds the plugin to the specified jquery object
+  function bind( $ ) {
+    $.fn.oEmbed = function(url, options) {
+      return this.each(function() {
+        new OEmbed(this, url, options).init();
+      });
+    };
+  }
+
+  OEmbed.bind = bind;
+
+  // binding to global jquery and expose binding method as amd module
+  if ( window.define && window.define.amd == true ){
+    define(function(){
+      return OEmbed;
     });
-  };
+  }
 
-  // AMD, CommonJS or Global
-  // optional: window.oEmbed = oEmbed;
-  
-})( jQuery, window , document );
+  if ( window.jQuery ) {
+    OEmbed.bind( window.jQuery );
+  }
+
+})(window, document);
